@@ -1,0 +1,13 @@
+RewriteEngine On
+
+# Redirect /create to rfid_api.php with POST method
+RewriteRule ^rfid_api.php/create$ rfid_api.php [L]
+
+# Redirect /update to rfid_api.php with PUT method
+RewriteRule ^rfid_api.php/update$ rfid_api.php [L]
+
+# Redirect /delete to rfid_api.php with DELETE method
+RewriteRule ^rfid_api.php/delete$ rfid_api.php [L]
+
+# Redirect for specific ID, e.g., rfid_api.php/id/1
+RewriteRule ^rfid_api.php/id/([0-9]+)$ rfid_api.php?id=$1 [L]

@@ -1,0 +1,32 @@
+API KEY KALAU MAU GENERATE BARU KE tools/apikey.php
+
+GET : 
+http://192.168.1.7/nama_project/api/rfid_api.php
+http://192.168.1.7/nama_project/api/rfid_api.php?id= // mengambil 1 data spesifik
+
+POST :
+/create
+{
+    "rfid_id": "12345",
+    "name": "Ridho Saputra"
+}
+
+PUT :
+/update
+{
+    "rfid_id": "12345",
+    "name": "Ridho Saputra" // keluar 
+}
+
+DELETE :
+/delete
+{
+    "id": 1
+}
+
+
+
+
+
+
+
