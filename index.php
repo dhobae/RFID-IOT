@@ -166,42 +166,62 @@ if (!isset($_SESSION['user_id'])) {
                         'API-Key': apiKey // Tambahkan API key pada header API-Key
                     },
                     success: function(data) {
-                        let tableContent = '';
                         let no = 1; // Inisialisasi nomor urut
+                        let tableContent = [];
 
-                        // Membuat baris tabel dinamis
+                        // Membuat data array untuk DataTable
                         data.forEach(log => {
-                            tableContent += `<tr>
-                        <td>${no}</td>
-                        <td>${log.rfid_id}</td>
-                        <td>${log.name}</td>
-                        <td>${log.entry_time || '-'}</td>
-                        <td>${log.exit_time || '-'}</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm deleteBtn" data-id="${log.id}">Delete</button>
-                        </td>
-                    </tr>`;
-                            no++; // Increment nomor urut
+                            tableContent.push([
+                                no++,
+                                log.rfid_id,
+                                log.name,
+                                log.entry_time || '-',
+                                log.exit_time || '-',
+                                `<button class="btn btn-danger btn-sm deleteBtn" data-id="${log.id}">Delete</button>`
+                            ]);
                         });
 
-                        // Masukkan konten tabel baru ke dalam elemen dengan id 'logTable'
-                        $('#logTable').html(tableContent);
-
-                        // Jika DataTable sudah ada, hancurkan terlebih dahulu karena ada loadlogs
-                        if ($.fn.dataTable.isDataTable('#tabel-rfid')) {
-                            $('#tabel-rfid').DataTable().clear().destroy();
+                        // Jika DataTable sudah diinisialisasi
+                        if (table) {
+                            table.clear(); // Bersihkan data lama
+                            table.rows.add(tableContent); // Tambahkan data baru
+                            table.draw(); // Render ulang tabel
+                        } else {
+                            // Inisialisasi DataTable jika belum ada
+                            table = $('#tabel-rfid').DataTable({
+                                data: tableContent,
+                                columns: [{
+                                        title: "No"
+                                    },
+                                    {
+                                        title: "RFID ID"
+                                    },
+                                    {
+                                        title: "Name"
+                                    },
+                                    {
+                                        title: "Entry Time"
+                                    },
+                                    {
+                                        title: "Exit Time"
+                                    },
+                                    {
+                                        title: "Actions"
+                                    }
+                                ],
+                                columnDefs: [{
+                                    targets: 5,
+                                    orderable: false
+                                }]
+                            });
                         }
-
-                        // Inisialisasi DataTable baru
-                        table = new DataTable('#tabel-rfid', {
-                            columnDefs: [{
-                                targets: 5,
-                                orderable: false
-                            }]
-                        });
+                    },
+                    error: function() {
+                        Swal.fire('Error!', 'Terjadi kesalahan saat memuat data log.', 'error');
                     }
                 });
             }
+
 
             // Panggil loadLogs untuk pertama kali
             loadLogs();
